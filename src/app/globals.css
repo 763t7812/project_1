@@ -1,0 +1,237 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+.App,body,html{
+  width: 100%;
+  overflow: auto;
+  background-color:#121212;
+}
+.container{
+  width: 95%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  /* flex-wrap: wrap; */
+}
+.streams{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  width: 60%;
+  padding: 20px 0;
+  gap: 5px;
+}
+.streams video{
+  flex-grow: 1;
+  width: 100%;
+  height: 50%;
+  border-radius: 20px;
+  border: 1px solid rgb(0, 128, 49);
+  /* background-color: #242323; */
+}
+.message{
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+  padding:20px;
+}
+.messages{
+flex: 1;
+width: 100%;
+border-radius: 20px;
+background-color: #242323;
+display: flex;
+justify-content: flex-start;
+align-items: flex-start;
+flex-direction: column;
+gap: 10px;
+padding: 20px;
+overflow-y: auto;
+overflow-x: hidden;
+}
+.messages ::-webkit-scrollbar{
+  display: none;
+}
+.messages .me{
+  width: 100%;
+  color: whitesmoke;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items:flex-start;
+  gap: 4px;
+  flex-direction: column;
+}
+.messages .me span{
+  word-wrap: break-word;
+  width: 100%;
+}
+.text{
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+  background-color: #242323;
+  overflow: hidden;
+}
+.text input{
+   flex: 1;
+   height: 100%;
+   padding: 5px 20px;
+   font-size: 18px;
+   color: whitesmoke;
+   font-weight: 500;
+   background-color: #242323;
+   resize: none;
+   outline: none;
+   border: none;
+   word-wrap: break-word;
+}
+.text input::-webkit-scrollbar{
+  display: none;
+}
+.text button{
+  height: 100%;
+  padding: 0 10px;
+  cursor: pointer;
+  font-weight: 600;
+  background-color: rgb(20, 126, 224);
+  color: whitesmoke;
+  border: none;
+  outline: none;
+}
+@keyframes blink { 50% { fill: transparent }}
+.dot { 
+  animation: 1s blink infinite;
+  fill: grey;
+}
+.dot:nth-child(2) { animation-delay: 250ms }
+.dot:nth-child(3) { animation-delay: 500ms }
+
+.loader {
+  background-color: #242323;
+
+  color: grey;
+}
+.usertyping{
+  bottom: 0px;
+  width: 100%;
+  background-color: #242323;
+}
+.header{
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: whitesmoke;
+}
+.header a{
+  color: whitesmoke;
+  text-decoration: none;
+}
+.rubby{
+  margin: 0 auto;
+  padding: 20px 0;
+  width: 80%;
+}
+.rubby button{
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: rgb(71, 149, 250);
+  color: whitesmoke;
+}
+.startchat{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
+  align-items: center;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap')
+
+
+ 
