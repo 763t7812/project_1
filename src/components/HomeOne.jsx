@@ -14,20 +14,24 @@ import Image from 'next/image';
 import { AlignJustify } from 'lucide-react';
 import { MoveRight } from 'lucide-react';
 import { SocketContext } from '../context/SocketContext'
-import Videoplayer from './Videoplayer';
-import axios from 'axios';
 
 function HomeOne() {
     const [media, setMedia] = useState(false)
-    const [calling, setCalling] = useState(false)
     const [failed, setFailed] = useState(false)
-    const [callid, setCallid] = useState(null)
-    const [online, setOnline] = useState(0)
+
 
     const [msg, setMsg] = useState('')
     const {
         messages,
         me,
+        calling,
+        setCalling,
+        callid,
+        keeplive,
+        setCallid,
+        setOnline,
+        online,
+        callUserid,
         call,
         callAccepted,
         myVideo,
@@ -50,53 +54,53 @@ function HomeOne() {
     useEffect(() => {
         socket.emit('total', me, (result) => {
             setOnline(result.length)
-            console.log(result)
+            // console.log(result,'<=== ye hay user count wala')
         })
     }, [])
 
-    const callUserid = (me) => {
-        setCalling(true);
-        addstream();
-      
-        axios.get('https://api-t3gj.onrender.com/api/call/' + localStorage.getItem('id')).then(data => {});
-        console.log("me: ", me);
-        axios.get('https://api-t3gj.onrender.com/api/getids')
-          .then(data => {
-            console.log(typeof (localStorage.getItem('oncall')));
-            console.log(data);
-            if (data.data.data.length == 0) {
-              if (localStorage.getItem('oncall') === 'false') {
-                keeplive();
-              }
-            } else {
-              let u_id = 0;
-              let allusers = data.data.data;
-              socket.emit('total', me, (result) => {
-                let users = allusers.filter(usr => result.includes(usr.uid));
-                setOnline(users.length);
-                const shuffledUsers = users.slice().sort(() => Math.random() - 0.5);
-      
-                // **Call leavecall() here to disconnect from any existing call:**
-                 // Disconnect from existing call before starting a new one
-      
-                for (let i = 0; i < shuffledUsers.length; i++) {
-                  if (users[i].uid != localStorage.getItem('id')) {
-                    setCallid(users[i].uid);
-                    u_id = users[i].uid;
-                    break;
-                  }
-                }
-      
-                if (u_id == 0 && localStorage.getItem('oncall') === 'false') {
-                  keeplive();
-                } else {
-                }
-              });
-            }
-          });
-      };
-      
-    console.log(callid, "<== users hay shsyad")
+    // const callUserid = (me) => {
+    //     setCalling(true);
+    //     addstream();
+
+    //     axios.get('https://api-t3gj.onrender.com/api/call/' + localStorage.getItem('id')).then(data => {});
+    //     console.log("me: ", me);
+    //     axios.get('https://api-t3gj.onrender.com/api/getids')
+    //       .then(data => {
+    //         console.log(typeof (localStorage.getItem('oncall')));
+    //         console.log(data);
+    //         if (data.data.data.length == 0) {
+    //           if (localStorage.getItem('oncall') === 'false') {
+    //             keeplive();
+    //           }
+    //         } else {
+    //           let u_id = 0;
+    //           let allusers = data.data.data;
+    //           socket.emit('total', me, (result) => {
+    //             let users = allusers.filter(usr => result.includes(usr.uid));
+    //             setOnline(users.length);
+    //             const shuffledUsers = users.slice().sort(() => Math.random() - 0.5);
+
+    //             // **Call leavecall() here to disconnect from any existing call:**
+    //              // Disconnect from existing call before starting a new one
+
+    //             for (let i = 0; i < shuffledUsers.length; i++) {
+    //               if (users[i].uid != localStorage.getItem('id')) {
+    //                 setCallid(users[i].uid);
+    //                 u_id = users[i].uid;
+    //                 break;
+    //               }
+    //             }
+
+    //             if (u_id == 0 && localStorage.getItem('oncall') === 'false') {
+    //               keeplive();
+    //             } else {
+    //             }
+    //           });
+    //         }
+    //       });
+    //   };
+
+
     useEffect(() => {
         if (!callid) return
         const callru = async () => {
@@ -113,37 +117,7 @@ function HomeOne() {
         }
     }, [failed])
 
-    const keeplive = () => {
-        let ids = []
-        let tm = setInterval(() => {
-            if (localStorage.getItem('oncall') === 'false') {
-                setCalling(true)
-                axios.get('https://api-t3gj.onrender.com/api/getids')
-                    .then(dat => {
-                        if (dat.data.data.length > 0) {
-                            let allusers = dat.data.data
-                            socket.emit('total', me, (result) => {
-                                let users = allusers.filter(urs => result.includes(urs.uid)).reverse()
-                                setOnline(users.length)
-                                for (let i = 0; i < users.length; i++) {
-                                    if (users[i].uid != localStorage.getItem('id') && !ids.includes(users[i].uid)) {
-                                        ids.push(users[i].uid)
-                                        if (localStorage.getItem('oncall') === 'true') return clearInterval(tm)
-                                        if (localStorage.getItem('oncall') !== 'false') return console.log('clear')
-                                        setCallid(users[i].uid)
-                                        break
-                                    }
 
-                                }
-                            })
-
-                        }
-                    })
-            } else {
-                clearInterval(tm)
-            }
-        }, 3000);
-    }
 
     return (
         <section className='flex max-w-screen-2xl mx-auto justify-center items-start w-full'>
@@ -160,7 +134,10 @@ function HomeOne() {
                             <button className='flex justify-center items-center h-[100px] w-full bg-slate-400'>stop</button>
                             <button
                                 className='flex justify-center items-center h-[100px] w-full bg-slate-400'
-                                onClick={() => (callUserid(localStorage.getItem('id')),leavecall())}
+                                onClick={() => {
+                                    leavecall(); // Disconnect the current call
+                                    // callUserid(localStorage.getItem('id')); // Initiate a new call
+                                }}
                             >Next</button>
                             <button className='flex justify-center items-center h-[100px] w-full bg-slate-400'>I am</button>
                         </div>
